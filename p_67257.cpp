@@ -1,62 +1,59 @@
 #include <string>
 #include <vector>
-#include <iostream>
 #include <algorithm>
 using namespace std;
 
-struct Pos {
-    int x;
-    int y;
-};
-int get_distance(Pos& hand_pos, Pos& num_pos) {
-    return abs(hand_pos.x - num_pos.x) + abs(hand_pos.y - num_pos.y);
+bool is_exp(char c) {
+    if (c == '+' || c == '-' || c == '*')
+        return true;
+    return false;
 }
-void move_hand(Pos& hand_pos, Pos& num_pos) {
-    hand_pos.x = num_pos.x;
-    hand_pos.y = num_pos.y;
-}
-string solution(vector<int> numbers, string hand) {
-    string answer = "";
-    Pos l{ 3,0 };
-    Pos r{ 3,2 };
-    Pos num_pos[10];
-    num_pos[0] = { 3,1 };
-    for (int i = 1; i <= 9; i++) {
-        num_pos[i].x = (i - 1) / 3;
-        num_pos[i].y = (i - 1) % 3;
+
+long long solution(string expression) {
+    long long answer = 0;
+    vector<long long> num;
+    vector<char> exp, loc;
+    string str_n = "";
+    for (int i = 0; i < expression.size(); i++) {
+        char c = expression[i];
+        if (is_exp(c)) {
+            num.push_back(stoi(str_n));
+            str_n = "";
+            if (find(exp.begin(), exp.end(), c) == exp.end())
+                exp.push_back(c);
+            loc.push_back(c);
+        }
+        else
+            str_n += c;
     }
-    for (int i = 0; i < numbers.size(); i++) {
-        int num = numbers[i];
-        if (num == 1 || num == 4 || num == 7) {
-            answer += "L";
-            move_hand(l, num_pos[num]);
-        }
-        else if (num == 3 || num == 6 || num == 9) {
-            answer += "R";
-            move_hand(r, num_pos[num]);
-        }
-        else {
-            int dist_l = get_distance(l, num_pos[num]);
-            int dist_r = get_distance(r, num_pos[num]);
-            if (dist_l < dist_r) {
-                answer += "L";
-                move_hand(l, num_pos[num]);
-            }
-            else if (dist_l > dist_r) {
-                answer += "R";
-                move_hand(r, num_pos[num]);
-            }
-            else {
-                if (hand == "left") {
-                    answer += "L";
-                    move_hand(l, num_pos[num]);
-                }
-                else {
-                    answer += "R";
-                    move_hand(r, num_pos[num]);
+
+    num.push_back(stoi(str_n));
+    sort(exp.begin(), exp.end());
+
+    do {
+        vector<long long> tmp_num = num;
+        vector<char> tmp_loc = loc;
+
+        for (int i = 0; i < exp.size(); i++) {
+            for (int j = 0; j < tmp_loc.size(); j++) {
+                if (exp[i] == tmp_loc[j]) {
+                    if (tmp_loc[j] == '+')
+                        tmp_num[j] += tmp_num[j + 1];
+                    else if (tmp_loc[j] == '-')
+                        tmp_num[j] -= tmp_num[j + 1];
+                    else if (tmp_loc[j] == '*')
+                        tmp_num[j] *= tmp_num[j + 1];
+
+                    tmp_num.erase(tmp_num.begin() + j + 1);
+                    tmp_loc.erase(tmp_loc.begin() + j);
+                    j--;
                 }
             }
         }
-    }
+
+        if (answer < abs(tmp_num[0]))
+            answer = abs(tmp_num[0]);
+    } while (next_permutation(exp.begin(), exp.end()));
+
     return answer;
 }
