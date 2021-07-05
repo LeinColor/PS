@@ -5,8 +5,8 @@ int main()
 {
 	int N;
 	cin >> N;
-	for (int i = 1; i <= 9; i++) {
-		cout << N << " * " << i << " = " << N * i << '\n';
+	for (int i = 1; i <= N; i++) {
+		cout << i << '\n';
 	}
 	return 0;
 }
