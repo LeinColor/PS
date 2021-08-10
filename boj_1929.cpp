@@ -18,6 +18,5 @@ int main()
 		if (isPrime[i])
 			cout << i << '\n';
 	}
-
 	return 0;
 }
