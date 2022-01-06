@@ -9,12 +9,12 @@ int main()
 {
 	ll X, Y, Z;
 	cin >> X >> Y;
-	Z = (Y / (long double)X) * 100;
+	Z = Y * 100 / X;
 
 	ll lo = 0, hi = INF, mid = 0, nZ;
 	while (lo + 1 < hi) {
 		mid = (lo + hi) / 2;
-		nZ = (Y + mid) / (long double)(X + mid) * 100;
+		nZ = (Y + mid) * 100 / (X + mid);
 		if (nZ == Z)
 			lo = mid;
 		else

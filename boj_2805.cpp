@@ -1,34 +1,33 @@
 #include <iostream>
-#include <algorithm>
 using namespace std;
 
-typedef long long ll;
+using ll = long long int;
 
-ll tree[1000001];
+const int MAX_SIZE = 1000001;
+
+ll height[MAX_SIZE];
 int main()
 {
 	cin.tie(0);
 	ios_base::sync_with_stdio(false);
 
-	ll N, M;
+	int N, M;
 	cin >> N >> M;
-	for (ll i = 0; i < N; i++)
-		cin >> tree[i];
-	ll lo = 0, hi = 2000000001, mid = 0;
+	for (int i = 0; i < N; i++)
+		cin >> height[i];
+
+	ll lo = 0, hi = 1000000000;
 	while (lo + 1 < hi) {
+		ll mid = lo + (hi - lo) / 2;
 		ll sum = 0;
-		mid = (lo + hi) / 2;
-		for (ll i = 0; i < N; i++) {
-			if (tree[i] > mid)
-				sum += (tree[i] - mid);
+		for (int i = 0; i < N; i++) {
+			if (height[i] > mid)
+				sum += height[i] - mid;
 		}
-		if (sum < M) {
-			hi = mid;
-		}
-		else {
-			lo = mid;
-		}
+		if (sum >= M) lo = mid;
+		else hi = mid;
 	}
 	cout << lo;
+
 	return 0;
 }
