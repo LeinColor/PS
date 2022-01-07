@@ -44,6 +44,7 @@ void update_segment_tree(int node, int start, int end, int index, ll diff)
 		update_segment_tree(node * 2 + 1, mid + 1, end, index, diff);
 	}
 }
+
 int main()
 {
 	ios::sync_with_stdio(false);
