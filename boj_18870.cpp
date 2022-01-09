@@ -1,30 +1,25 @@
 #include <iostream>
-#include <unordered_map>
+#include <vector>
 #include <algorithm>
 using namespace std;
 
-const int MAX_SIZE = 1000001;
-int arr[MAX_SIZE];
-int cpy[MAX_SIZE];
-int ans[MAX_SIZE];
-unordered_map<int, int> um;
+vector<int> origin;
+vector<int> compressed;
 int main()
 {
-	ios_base::sync_with_stdio(false);
 	cin.tie(0);
+	ios_base::sync_with_stdio(false);
 
-	int N, j = 0;
-	cin >> N;
+	int N; cin >> N;
 	for (int i = 0; i < N; i++) {
-		cin >> arr[i];
-		if (um[arr[i]] == 0)
-			cpy[j++] = arr[i];
-		um[arr[i]]++;
+		int x; cin >> x;
+		origin.push_back(x);
+		compressed.push_back(x);
 	}
-	sort(cpy, cpy + j);
-	for (int i = 0; i < N; i++)
-		ans[i] = lower_bound(cpy, cpy + j, arr[i]) - cpy;
-	for (int i = 0; i < N; i++)
-		cout << ans[i] << ' ';
+	sort(compressed.begin(), compressed.end());
+	compressed.erase(unique(compressed.begin(), compressed.end()), compressed.end());
+	for (int i = 0; i < origin.size(); i++) {
+		cout << lower_bound(compressed.begin(), compressed.end(), origin[i]) - compressed.begin() << ' ';
+	}
 	return 0;
 }
