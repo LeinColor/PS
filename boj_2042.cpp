@@ -75,6 +75,5 @@ int main()
 			cout << sum(1, 0, N - 1, b - 1, c - 1) << '\n';
 		}
 	}
-
 	return 0;
 }
