@@ -1,11 +1,13 @@
-#include <iostream>
-using namespace std;
+#include <stdio.h>
+#include <string.h>
 
-const int MAX_N = 1000002;
-int p[MAX_N];
+#define MAXN 1000001
+
+int p[MAXN];
+int n, m;
 int find(int n)
 {
-	if (p[n] < 0) return n;
+	if (p[n] == -1) return n;
 	p[n] = find(p[n]);
 	return p[n];
 }
@@ -20,21 +22,16 @@ void merge(int a, int b)
 
 int main()
 {
-	cin.tie(0);
-	ios_base::sync_with_stdio(false);
+	scanf("%d%d", &n, &m);
+	memset(p, -1, sizeof(p));
 
-	int n, m;
-	cin >> n >> m;
-	for (int i = 0; i < MAX_N; i++) {
-		p[i] = -1;
-	}
 	for (int i = 0; i < m; i++) {
-		int x, a, b;
-		cin >> x >> a >> b;
-		if (x == 0) merge(a, b);
-		else if (x == 1) {
-			if (find(a) == find(b)) cout << "YES\n";
-			else cout << "NO\n";
+		int k, a, b;
+		scanf("%d%d%d", &k, &a, &b);
+		if (k == 0) merge(a, b);
+		else {
+			if (find(a) == find(b)) printf("YES\n");
+			else printf("NO\n");
 		}
 	}
 	return 0;
