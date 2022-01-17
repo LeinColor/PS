@@ -30,8 +30,10 @@ int main()
 		scanf("%d%d%d", &k, &a, &b);
 		if (k == 0) merge(a, b);
 		else {
-			if (find(a) == find(b)) printf("YES\n");
-			else printf("NO\n");
+			if (find(a) == find(b))
+				printf("YES\n");
+			else
+				printf("NO\n");
 		}
 	}
 	return 0;
