@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-
 #define MAXN 1000001
 
 int p[MAXN];
