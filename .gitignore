@@ -26,3 +26,4 @@ Debug
 *.vcxproj
 *.filters
 *.user
+*.exe
