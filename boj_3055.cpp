@@ -1,115 +1,105 @@
 #include <iostream>
-#include <algorithm>
 #include <queue>
 using namespace std;
 
-const int MAXN = 52;
-struct Node
-{
-    int x, y, l;
-};
+int R, C;
+char map[51][51];
+int visited[51][51];
 
-queue<Node> waterQ, beaverQ;
-int R, C, ans;
-char arr[MAXN][MAXN];
-bool beaver_visit[MAXN][MAXN], water_visit[MAXN][MAXN];
-bool beaverCanMove;
-int dx[] = {-1, 1, 0, 0};
-int dy[] = {0, 0, -1, 1};
-void waterBFS()
-{
-    int sz = waterQ.size();
+queue<pair<int, int>> p;
+queue<pair<int, int>> w;
 
-    for (int i = 0; i < sz; i++)
+int dx[4] = {0, 0, -1, 1};
+int dy[4] = {1, -1, 0, 0};
+
+int solution()
+{
+    while (!p.empty())
     {
-        int x = waterQ.front().x;
-        int y = waterQ.front().y;
-        waterQ.pop();
+        int ws = w.size();
+        int ps = p.size();
 
-        water_visit[x][y] = true;
-
-        for (int j = 0; j < 4; j++)
+        // flooding
+        for (int i = 0; i < ws; i++)
         {
-            int nx = x + dx[j];
-            int ny = y + dy[j];
+            int y = w.front().first;
+            int x = w.front().second;
+            w.pop();
 
-            if (nx < 0 || ny < 0 || nx >= R || ny >= C)
-                continue;
-
-            if (!water_visit[nx][ny] && arr[nx][ny] == '.')
+            for (int j = 0; j < 4; j++)
             {
-                arr[nx][ny] = '*';
-                waterQ.push(Node{nx, ny, 0});
+                int cy = y + dy[j];
+                int cx = x + dx[j];
+
+                if (cy < 0 || cy >= R || cx < 0 || cx >= C)
+                    continue;
+                if (map[cy][cx] != '.')
+                    continue;
+
+                map[cy][cx] = '*';
+                w.push(make_pair(cy, cx));
+            }
+        }
+
+        // moving
+        for (int i = 0; i < ps; i++)
+        {
+            int y = p.front().first;
+            int x = p.front().second;
+            p.pop();
+
+            for (int j = 0; j < 4; j++)
+            {
+                int cy = y + dy[j];
+                int cx = x + dx[j];
+
+                if (cy < 0 || cy >= R || cx < 0 || cx >= C)
+                    continue;
+
+                if (map[cy][cx] == 'D')
+                {
+                    return visited[y][x] + 1;
+                }
+                else if (map[cy][cx] == '.' && !visited[cy][cx])
+                {
+                    visited[cy][cx] = visited[y][x] + 1;
+                    p.push(make_pair(cy, cx));
+                }
             }
         }
     }
+    return -1;
 }
-void beaverBFS()
-{
-    int sz = beaverQ.size();
-    beaverCanMove = false;
 
-    for (int i = 0; i < sz; i++)
-    {
-        int x = beaverQ.front().x;
-        int y = beaverQ.front().y;
-        int l = beaverQ.front().l;
-        beaverQ.pop();
-
-        if (arr[x][y] == 'S')
-            ans = min(ans, l);
-
-        beaver_visit[x][y] = true;
-
-        for (int j = 0; j < 4; j++)
-        {
-            int nx = x + dx[j];
-            int ny = y + dy[j];
-
-            if (nx < 0 || ny < 0 || nx >= R || ny >= C)
-                continue;
-
-            if (!beaver_visit[nx][ny] && (arr[nx][ny] == '.' || arr[nx][ny] == 'S'))
-            {
-                beaverCanMove = true;
-                arr[nx][ny] = '*';
-                beaverQ.push(Node{nx, ny, l + 1});
-            }
-        }
-    }
-}
 int main()
 {
+    int res = 0;
+
     scanf("%d%d", &R, &C);
     for (int i = 0; i < R; i++)
-    {
-        scanf("%s", &arr[i]);
-    }
+        scanf("%s", map[i]);
 
     for (int i = 0; i < R; i++)
     {
         for (int j = 0; j < C; j++)
         {
-            if (arr[i][j] == 'D')
-                beaverQ.push(Node{i, j, 1});
-            else if (arr[i][j] == '*')
-                waterQ.push(Node{i, j, 0});
-        }
-    }
-
-    for (int i = 0; i < R; i++)
-    {
-        for (int j = 0; j < C; j++)
-        {
-            waterBFS();
-            beaverBFS();
-            if (!beaverCanMove)
+            if (map[i][j] == 'S')
             {
-                printf("KAKTUS");
-                return 0;
+                visited[i][j] = 0;
+                map[i][j] = '.';
+                p.push(make_pair(i, j));
+            }
+            if (map[i][j] == '*')
+            {
+                w.push(make_pair(i, j));
             }
         }
     }
-    printf("%d", ans);
-    return 0;
+
+    res = solution();
+
+    if (res == -1)
+        printf("KAKTUS");
+    else
+        printf("%d", res);
 }
