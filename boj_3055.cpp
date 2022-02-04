@@ -102,4 +102,6 @@ int main()
         printf("KAKTUS");
     else
         printf("%d", res);
+
+    return 0;
 }
